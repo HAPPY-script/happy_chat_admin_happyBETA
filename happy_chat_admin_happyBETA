@@ -5,15 +5,22 @@ local playerGui = player:WaitForChild("PlayerGui")
 
 -- Tạo ScreenGui
 local screenGui = Instance.new("ScreenGui")
-screenGui.ResetOnSpawn = false -- Đảm bảo menu tồn tại ngay cả khi nhân vật spawn lại
-screenGui.IgnoreGuiInset = true -- Loại bỏ phần trên cùng màn hình trên các thiết bị di động
+screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = true
 screenGui.Parent = playerGui
+
+-- Tạo hiệu ứng mờ nền
+local blurEffect = Instance.new("Frame")
+blurEffect.Size = UDim2.new(1, 0, 1, 0)
+blurEffect.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+blurEffect.BackgroundTransparency = 0.7
+blurEffect.Parent = screenGui
 
 -- Tạo Frame chính (menu)
 local menuFrame = Instance.new("Frame")
-menuFrame.Size = UDim2.new(0, 400, 0, 300)
+menuFrame.Size = UDim2.new(0, 450, 0, 300)
 menuFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-menuFrame.BackgroundColor3 = Color3.fromHex("#330099")
+menuFrame.BackgroundColor3 = Color3.fromHex("#4B0082") -- Màu tím đẹp hơn
 menuFrame.BackgroundTransparency = 1
 menuFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 menuFrame.Parent = screenGui
@@ -27,8 +34,8 @@ local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, 0, 0.3, 0)
 titleLabel.Position = UDim2.new(0, 0, 0, 0)
 titleLabel.Text = ""
-titleLabel.Font = Enum.Font.GothamBold
-titleLabel.TextSize = 40
+titleLabel.Font = Enum.Font.GothamBlack -- Font chữ đậm hơn
+titleLabel.TextSize = 50 -- Tăng kích thước chữ
 titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleLabel.BackgroundTransparency = 1
 titleLabel.TextTransparency = 1
@@ -38,26 +45,36 @@ task.spawn(function()
     local text = "HAPPY script"
     for i = 1, #text do
         titleLabel.Text = text:sub(1, i)
-        TweenService:Create(titleLabel, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
-        task.wait(0.2)
+        TweenService:Create(titleLabel, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+        task.wait(0.3) -- Làm chậm hơn
     end
 end)
 
--- Tạo "loading..."
-local loadingLabel = Instance.new("TextLabel")
-loadingLabel.Size = UDim2.new(1, 0, 0.2, 0)
-loadingLabel.Position = UDim2.new(0, 0, 0.4, 0)
-loadingLabel.Text = "loading..."
-loadingLabel.Font = Enum.Font.Gotham
-loadingLabel.TextSize = 20
-loadingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-loadingLabel.BackgroundTransparency = 1
-loadingLabel.TextTransparency = 1
-loadingLabel.Parent = menuFrame
+-- Tạo thanh loading
+local loadingBar = Instance.new("Frame")
+loadingBar.Size = UDim2.new(0.8, 0, 0.1, 0)
+loadingBar.Position = UDim2.new(0.1, 0, 0.6, 0)
+loadingBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+loadingBar.BackgroundTransparency = 0.5
+loadingBar.Parent = menuFrame
 
+local loadingProgress = Instance.new("Frame")
+loadingProgress.Size = UDim2.new(0, 0, 1, 0)
+loadingProgress.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+loadingProgress.Parent = loadingBar
+
+local uiCornerBar = Instance.new("UICorner")
+uiCornerBar.CornerRadius = UDim.new(0.5, 0)
+uiCornerBar.Parent = loadingBar
+
+local uiCornerProgress = Instance.new("UICorner")
+uiCornerProgress.CornerRadius = UDim.new(0.5, 0)
+uiCornerProgress.Parent = loadingProgress
+
+-- Tạo phần trăm
 local percentLabel = Instance.new("TextLabel")
 percentLabel.Size = UDim2.new(1, 0, 0.2, 0)
-percentLabel.Position = UDim2.new(0, 0, 0.6, 0)
+percentLabel.Position = UDim2.new(0, 0, 0.7, 0)
 percentLabel.Text = "0%"
 percentLabel.Font = Enum.Font.Gotham
 percentLabel.TextSize = 20
@@ -68,45 +85,36 @@ percentLabel.Parent = menuFrame
 
 -- Hiệu ứng loading
 local function startLoading()
-    TweenService:Create(loadingLabel, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
     TweenService:Create(percentLabel, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
-
-    task.spawn(function()
-        while true do
-            TweenService:Create(loadingLabel, TweenInfo.new(0.5), {TextTransparency = 0.5}):Play()
-            task.wait(0.5)
-            TweenService:Create(loadingLabel, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
-            task.wait(0.5)
-        end
-    end)
 
     for i = 0, 100 do
         percentLabel.Text = tostring(i) .. "%"
-        task.wait(0.05)
+        loadingProgress:TweenSize(UDim2.new(i / 100, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, 0.1, true)
+        task.wait(0.1) -- Chậm hơn
     end
 end
 
 -- Hiệu ứng mờ dần rồi biến mất
 local function fadeOut()
+    TweenService:Create(blurEffect, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
     TweenService:Create(menuFrame, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
     TweenService:Create(titleLabel, TweenInfo.new(1), {TextTransparency = 1}):Play()
-    TweenService:Create(loadingLabel, TweenInfo.new(1), {TextTransparency = 1}):Play()
     TweenService:Create(percentLabel, TweenInfo.new(1), {TextTransparency = 1}):Play()
     task.wait(1)
     screenGui:Destroy()
 
     -- Chạy script sau khi menu biến mất
     game.StarterGui:SetCore("SendNotification", {
-        Title = "V1.4";
-        Text = "THANK FOR 27 SUB !";
+        Title = "V1.5";
+        Text = "Thank you for supporting!";
         Duration = 5;
     })
     loadstring(game:HttpGet("https://raw.githubusercontent.com/HAPPY-script/HAPPY_admin_chat_BETA/refs/heads/main/HAPPY_admin_chat_BETA"))()
 end
 
 -- Kích hoạt hiệu ứng
-TweenService:Create(menuFrame, TweenInfo.new(1), {BackgroundTransparency = 0}):Play()
-task.wait(1.2)
+TweenService:Create(menuFrame, TweenInfo.new(1.5), {BackgroundTransparency = 0}):Play()
+task.wait(1.5)
 startLoading()
-task.wait(2) -- Chờ loading hoàn tất
+task.wait(1) -- Chờ loading hoàn tất
 fadeOut()
