@@ -106,7 +106,7 @@ local function fadeOut()
     -- Chạy script sau khi menu biến mất
     game.StarterGui:SetCore("SendNotification", {
         Title = "V1.5";
-        Text = "Thank you for supporting!";
+        Text = "Thank you for like video!";
         Duration = 5;
     })
     loadstring(game:HttpGet("https://raw.githubusercontent.com/HAPPY-script/HAPPY_admin_chat_BETA/refs/heads/main/HAPPY_admin_chat_BETA"))()
