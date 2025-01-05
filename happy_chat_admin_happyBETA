@@ -90,7 +90,7 @@ local function startLoading()
     for i = 0, 100 do
         percentLabel.Text = tostring(i) .. "%"
         loadingProgress:TweenSize(UDim2.new(i / 100, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, 0.1, true)
-        task.wait(0.1) -- Chậm hơn
+        task.wait(0.05) -- Chậm hơn
     end
 end
 
