@@ -104,6 +104,9 @@ icon.Image = "rbxthumb://type=Asset&id=128834228591169&w=150&h=150" -- Thay bằ
 icon.ImageTransparency = 1 -- Bắt đầu từ trạng thái mờ hoàn toàn
 icon.Parent = menuFrame -- Đưa icon vào menuFrame để giữ đúng vị trí khi cửa sổ thay đổi
 
+-- Hiệu ứng icon xuất hiện từ mờ dần đến rõ dần
+TweenService:Create(icon, TweenInfo.new(1.5), {ImageTransparency = 0}):Play()
+
 -- Hiệu ứng mờ dần rồi biến mất
 local function fadeOut()
     TweenService:Create(blurEffect, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
