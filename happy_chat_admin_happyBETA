@@ -94,6 +94,16 @@ local function startLoading()
     end
 end
 
+-- Thêm icon cho menu
+local icon = Instance.new("ImageLabel")
+icon.Size = UDim2.new(0, 90, 0, 90) -- Kích thước icon
+icon.AnchorPoint = Vector2.new(0.5, 0.6) -- Đưa tâm icon vào giữa
+icon.Position = UDim2.new(0.5, 0, 0.45, 0) -- Đặt icon chính giữa menu, giữa title và loading bar
+icon.BackgroundTransparency = 1
+icon.Image = "rbxthumb://type=Asset&id=128834228591169&w=150&h=150" -- Thay bằng Asset ID của bạn
+icon.ImageTransparency = 1 -- Bắt đầu từ trạng thái mờ hoàn toàn
+icon.Parent = menuFrame -- Đưa icon vào menuFrame để giữ đúng vị trí khi cửa sổ thay đổi
+
 -- Hiệu ứng mờ dần rồi biến mất
 local function fadeOut()
     TweenService:Create(blurEffect, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
