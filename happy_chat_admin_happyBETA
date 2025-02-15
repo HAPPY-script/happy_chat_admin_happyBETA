@@ -9,125 +9,80 @@ screenGui.ResetOnSpawn = false
 screenGui.IgnoreGuiInset = true
 screenGui.Parent = playerGui
 
--- Tạo hiệu ứng mờ nền
-local blurEffect = Instance.new("Frame")
-blurEffect.Size = UDim2.new(1, 0, 1, 0)
-blurEffect.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-blurEffect.BackgroundTransparency = 0.7
-blurEffect.Parent = screenGui
+-- Màn hình đen hoàn toàn
+local blackScreen = Instance.new("Frame")
+blackScreen.Size = UDim2.new(1, 0, 1, 0)
+blackScreen.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+blackScreen.BackgroundTransparency = 1
+blackScreen.Parent = screenGui
 
--- Tạo Frame chính (menu)
-local menuFrame = Instance.new("Frame")
-menuFrame.Size = UDim2.new(0, 450, 0, 300)
-menuFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-menuFrame.BackgroundColor3 = Color3.fromHex("#4B0082") -- Màu tím đẹp hơn
-menuFrame.BackgroundTransparency = 1
-menuFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-menuFrame.Parent = screenGui
+-- Hiệu ứng tối dần
+TweenService:Create(blackScreen, TweenInfo.new(1.5), {BackgroundTransparency = 0}):Play()
 
-local uiCorner = Instance.new("UICorner")
-uiCorner.CornerRadius = UDim.new(0.1, 0)
-uiCorner.Parent = menuFrame
-
--- Tạo Title "HAPPY script"
+-- Tạo tiêu đề "HAPPY script"
 local titleLabel = Instance.new("TextLabel")
-titleLabel.Size = UDim2.new(1, 0, 0.3, 0)
-titleLabel.Position = UDim2.new(0, 0, 0, 0)
-titleLabel.Text = ""
-titleLabel.Font = Enum.Font.GothamBlack -- Font chữ đậm hơn
-titleLabel.TextSize = 50 -- Tăng kích thước chữ
+titleLabel.Size = UDim2.new(1, 0, 0.1, 0)
+titleLabel.Position = UDim2.new(0, 0, 0.4, 0)
+titleLabel.Text = "HAPPY script"
+titleLabel.Font = Enum.Font.GothamBlack
+titleLabel.TextSize = 50
 titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleLabel.BackgroundTransparency = 1
 titleLabel.TextTransparency = 1
-titleLabel.Parent = menuFrame
+titleLabel.Parent = blackScreen
 
-task.spawn(function()
-    local text = "HAPPY script"
-    for i = 1, #text do
-        titleLabel.Text = text:sub(1, i)
-        TweenService:Create(titleLabel, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
-        task.wait(0.3) -- Làm chậm hơn
-    end
-end)
+-- Hiệu ứng xuất hiện tiêu đề
+TweenService:Create(titleLabel, TweenInfo.new(1.5), {TextTransparency = 0}):Play()
 
--- Tạo thanh loading
-local loadingBar = Instance.new("Frame")
-loadingBar.Size = UDim2.new(0.8, 0, 0.1, 0)
-loadingBar.Position = UDim2.new(0.1, 0, 0.6, 0)
-loadingBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-loadingBar.BackgroundTransparency = 0.5
-loadingBar.Parent = menuFrame
+-- Tạo chữ "Loading"
+local loadingLabel = Instance.new("TextLabel")
+loadingLabel.Size = UDim2.new(1, 0, 0.05, 0)
+loadingLabel.Position = UDim2.new(0, 0, 0.5, 0)
+loadingLabel.Text = "Loading"
+loadingLabel.Font = Enum.Font.Gotham
+loadingLabel.TextSize = 30
+loadingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadingLabel.BackgroundTransparency = 1
+loadingLabel.TextTransparency = 1
+loadingLabel.Parent = blackScreen
 
-local loadingProgress = Instance.new("Frame")
-loadingProgress.Size = UDim2.new(0, 0, 1, 0)
-loadingProgress.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-loadingProgress.Parent = loadingBar
+-- Hiệu ứng xuất hiện chữ "Loading"
+TweenService:Create(loadingLabel, TweenInfo.new(1.5), {TextTransparency = 0}):Play()
 
-local uiCornerBar = Instance.new("UICorner")
-uiCornerBar.CornerRadius = UDim.new(0.5, 0)
-uiCornerBar.Parent = loadingBar
+-- Tạo icon loading quay vòng tròn
+local loadingIcon = Instance.new("ImageLabel")
+loadingIcon.Size = UDim2.new(0.1, 0, 0.1, 0) -- Sử dụng tỷ lệ để icon linh hoạt
+loadingIcon.SizeConstraint = Enum.SizeConstraint.RelativeXX -- Giữ icon luôn là hình tròn
+loadingIcon.Position = UDim2.new(0.5, 0, 0.6, 0) -- Đặt icon ở chính giữa và dưới chữ "Loading"
+loadingIcon.AnchorPoint = Vector2.new(0.5, 0) -- Neo icon từ tâm trên
+loadingIcon.BackgroundTransparency = 1
+loadingIcon.Image = "rbxthumb://type=Asset&id=16030756939&w=150&h=150" -- Icon tải vòng tròn
+loadingIcon.ImageTransparency = 1
+loadingIcon.Parent = blackScreen
 
-local uiCornerProgress = Instance.new("UICorner")
-uiCornerProgress.CornerRadius = UDim.new(0.5, 0)
-uiCornerProgress.Parent = loadingProgress
+-- Hiệu ứng xuất hiện icon
+TweenService:Create(loadingIcon, TweenInfo.new(1.5), {ImageTransparency = 0}):Play()
 
--- Tạo phần trăm
-local percentLabel = Instance.new("TextLabel")
-percentLabel.Size = UDim2.new(1, 0, 0.2, 0)
-percentLabel.Position = UDim2.new(0, 0, 0.7, 0)
-percentLabel.Text = "0%"
-percentLabel.Font = Enum.Font.Gotham
-percentLabel.TextSize = 20
-percentLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-percentLabel.BackgroundTransparency = 1
-percentLabel.TextTransparency = 1
-percentLabel.Parent = menuFrame
-
--- Hiệu ứng loading
-local function startLoading()
-    TweenService:Create(percentLabel, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
-
-    for i = 0, 100 do
-        percentLabel.Text = tostring(i) .. "%"
-        loadingProgress:TweenSize(UDim2.new(i / 100, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, 0.1, true)
-        task.wait(0.05) -- Chậm hơn
+-- Quay icon theo chiều kim đồng hồ
+local function rotateIcon()
+    local rotation = 0
+    while true do
+        rotation = rotation + 10
+        loadingIcon.Rotation = rotation
+        task.wait(0.05) -- Tốc độ quay
     end
 end
+task.spawn(rotateIcon)
 
--- Thêm icon cho menu
-local icon = Instance.new("ImageLabel")
-icon.Size = UDim2.new(0, 90, 0, 90) -- Kích thước icon
-icon.AnchorPoint = Vector2.new(0.5, 0.6) -- Đưa tâm icon vào giữa
-icon.Position = UDim2.new(0.5, 0, 0.45, 0) -- Đặt icon chính giữa menu, giữa title và loading bar
-icon.BackgroundTransparency = 1
-icon.Image = "rbxthumb://type=Asset&id=128834228591169&w=150&h=150" -- Thay bằng Asset ID của bạn
-icon.ImageTransparency = 1 -- Bắt đầu từ trạng thái mờ hoàn toàn
-icon.Parent = menuFrame -- Đưa icon vào menuFrame để giữ đúng vị trí khi cửa sổ thay đổi
+-- Thời gian loading random từ 5-7 giây
+local loadingTime = math.random(5, 7)
 
--- Hiệu ứng icon xuất hiện từ mờ dần đến rõ dần
-TweenService:Create(icon, TweenInfo.new(1.5), {ImageTransparency = 0}):Play()
+-- Kết thúc loading và chuyển sang script chính
+task.wait(loadingTime)
+TweenService:Create(blackScreen, TweenInfo.new(1.5), {BackgroundTransparency = 1}):Play()
 
--- Hiệu ứng mờ dần rồi biến mất
-local function fadeOut()
-    TweenService:Create(blurEffect, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
-    TweenService:Create(menuFrame, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
-    TweenService:Create(titleLabel, TweenInfo.new(1), {TextTransparency = 1}):Play()
-    TweenService:Create(percentLabel, TweenInfo.new(1), {TextTransparency = 1}):Play()
-    task.wait(1)
-    screenGui:Destroy()
-
-    -- Chạy script sau khi menu biến mất
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "V1.6✅";
-        Text = "🔥Thank for like video!🔥";
-        Duration = 5;
-    })
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/HAPPY-script/HAPPY_admin_chat_BETA/refs/heads/main/HAPPY_admin_chat_BETA"))()
-end
-
--- Kích hoạt hiệu ứng
-TweenService:Create(menuFrame, TweenInfo.new(1.5), {BackgroundTransparency = 0}):Play()
 task.wait(1.5)
-startLoading()
-task.wait(1) -- Chờ loading hoàn tất
-fadeOut()
+screenGui:Destroy()
+
+-- Chạy script chính từ URL
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HAPPY-script/HAPPY_admin_chat_BETA/refs/heads/main/HAPPY_admin_chat_BETA"))()
