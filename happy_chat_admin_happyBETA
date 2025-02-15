@@ -74,8 +74,8 @@ local function rotateIcon()
 end
 task.spawn(rotateIcon)
 
--- Thời gian loading random từ 5-7 giây
-local loadingTime = math.random(5, 7)
+-- Thời gian loading random từ 7-10 giây
+local loadingTime = math.random(7, 10)
 
 -- Kết thúc loading và chuyển sang script chính
 task.wait(loadingTime)
